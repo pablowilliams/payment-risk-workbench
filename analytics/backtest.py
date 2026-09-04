@@ -232,7 +232,7 @@ def main():
         )
     result = {
         "metadata": {
-            "project": "PulseLedger",
+            "project": "Payment Risk Workbench",
             "institution": "Verdant Bank (fictional)",
             "seed": SEED,
             "events": N,

@@ -5,7 +5,7 @@ locals {
 }
 
 resource "aws_kms_key" "evidence" {
-  description             = "PulseLedger event and decision evidence"
+  description             = "Payment Risk Workbench event and decision evidence"
   enable_key_rotation     = true
   deletion_window_in_days = 30
   policy = jsonencode({
@@ -105,7 +105,7 @@ resource "aws_sqs_queue" "decision" {
 }
 
 resource "aws_cloudwatch_log_group" "service" {
-  name              = "/pulseledger/${var.environment}/service"
+  name              = "/payment-risk-workbench/${var.environment}/service"
   retention_in_days = var.retention_days
   kms_key_id        = aws_kms_key.evidence.arn
 }

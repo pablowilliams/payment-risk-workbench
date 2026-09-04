@@ -3,10 +3,13 @@ import { pipeline } from "@/lib/data";
 export const dynamic = "force-dynamic";
 export function GET() {
   const encoder = new TextEncoder();
+  let cancelled = false;
+  let timer: ReturnType<typeof setTimeout> | undefined;
   const stream = new ReadableStream({
     start(controller) {
       let cursor = 0;
       const emit = () => {
+        if (cancelled) return;
         const stage = pipeline[cursor % pipeline.length];
         controller.enqueue(
           encoder.encode(
@@ -18,9 +21,13 @@ export function GET() {
           controller.close();
           return;
         }
-        setTimeout(emit, 350);
+        timer = setTimeout(emit, 350);
       };
       emit();
+    },
+    cancel() {
+      cancelled = true;
+      if (timer) clearTimeout(timer);
     },
   });
   return new Response(stream, {

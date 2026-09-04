@@ -21,18 +21,18 @@ export function ModelsView() {
     <div className="stack">
       <Header
         eyebrow="Model operations / Registry"
-        title="Performance with a release history."
+        title="Model performance and release status"
         description="Champion and challengers share one fixed holdout, alert budget and metric dictionary. Promotion requires evidence and named risk acceptance."
         actions={
           <Badge tone="green">
             <CheckCircle2 size={11} />
-            Champion healthy
+            Offline checks passed
           </Badge>
         }
       />
       <div className="model-header">
         <Panel>
-          <span>Production champion</span>
+          <span>Proposed champion</span>
           <div>
             <div className="model-logo">
               <GitCompareArrows size={19} />
@@ -49,7 +49,7 @@ export function ModelsView() {
           </footer>
         </Panel>
         <Panel>
-          <Section eyebrow="Threshold simulator" title="Capacity before accuracy" />
+          <Section eyebrow="Threshold scenario" title="Estimated queue demand" />
           <label>
             <span>
               Decision threshold<b>{threshold}%</b>
@@ -60,6 +60,7 @@ export function ModelsView() {
               max="98"
               value={threshold}
               onChange={(e) => setThreshold(Number(e.target.value))}
+              aria-label="Decision threshold scenario"
             />
           </label>
           <div className="threshold-result">
@@ -105,7 +106,7 @@ export function ModelsView() {
       <Panel>
         <Section
           eyebrow="Champion / challenger"
-          title="Same holdout. Same capacity. Visible trade-offs."
+          title="Comparison at the same holdout and capacity"
         />
         <div className="comparison">
           <header>

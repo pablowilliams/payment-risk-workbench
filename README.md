@@ -1,14 +1,14 @@
-# PulseLedger
+# Payment Risk Workbench
 
-**Human-centred, real-time financial-crime intelligence — built as an interviewer-verifiable engineering portfolio.**
+**A working payment-risk investigation and data-platform portfolio.**
 
-PulseLedger is an investigation platform for the fictional Verdant Bank. It connects streaming payment contracts, behavioural and graph detection, capacity-aware alert ranking, explainable investigation evidence, bounded AI tooling and exact-payload human approval. The result looks and behaves like an internal product, while keeping every claim inspectable and honest.
+Payment Risk Workbench is an investigation platform for the fictional Verdant Bank. It connects streaming payment contracts, behavioural and graph detection, capacity-aware alert ranking, reviewable evidence and exact-payload supervisor approval. It is presented as an internal operations tool, with every material claim linked to reproducible evidence.
 
 > All people, payments, labels, exposure, latency and operating telemetry are synthetic or modelled. This is not connected to a bank and it does not claim production performance.
 
 ## The operating question
 
-Fraud teams do not have unlimited review capacity. PulseLedger asks: at the same one-percent alert budget, can graph context find more labelled fraud without turning network proximity into guilt?
+Fraud teams do not have unlimited review capacity. Payment Risk Workbench asks: at the same one-percent alert budget, can graph context find more labelled fraud without turning network proximity into guilt?
 
 | Fixed-seed synthetic holdout |  Rules | Tabular | Graph ensemble |
 | ---------------------------- | -----: | ------: | -------------: |
@@ -21,7 +21,7 @@ Across **1,000,000 generated payments**, the graph ensemble produced **+8.2 perc
 
 ## What an interviewer can open
 
-- **Command centre** — decision, service health, queue pressure and evidence confidence in one operational view.
+- **Operations overview** — release decision, service health, scenario queue pressure and evidence status in one view.
 - **Alert queue** — searchable, risk-filtered cases ranked by consequence within fixed capacity.
 - **Investigation workspace** — customer context, event timeline, graph evidence, model reason codes, policy grounding and a working decision flow.
 - **Network graph** — interactive bounded traversal with an explicit interpretation boundary.
@@ -29,7 +29,7 @@ Across **1,000,000 generated payments**, the graph ensemble produced **+8.2 perc
 - **Data platform** — streaming contracts, quality, lag, replay, lineage and local/AWS architecture.
 - **Governance** — control owners, evidence, residual risks and event-to-human decision reconstruction.
 
-Press `⌘ K` or `Ctrl K` for the command palette. The interface is responsive and deliberately uses the language and density of an internal operations product rather than a generic AI landing page.
+Press `⌘ K` or `Ctrl K` for the view switcher. The interface is responsive and uses the language, density and restrained visual hierarchy of an internal operations product.
 
 ## Run locally
 
@@ -58,10 +58,11 @@ Useful API probes:
 curl http://localhost:3003/api/health
 curl 'http://localhost:3003/api/alerts?minimumRisk=0.9&limit=3'
 curl http://localhost:3003/api/metrics
+curl http://localhost:3003/api/reconciliation
 curl -N http://localhost:3003/api/stream
 ```
 
-The investigation UI calls `POST /api/decisions` to prepare a recommendation and `PUT /api/decisions` to approve the exact 20-character payload hash. A changed payload or stale state is rejected.
+The investigation UI calls `POST /api/decisions` as a demo investigator and `PUT /api/decisions` as a separate demo supervisor. Approval is bound to the full 64-character SHA-256 payload hash; self-approval, changed payloads, expired proposals and repeated approvals are rejected.
 
 ## Repository map
 
@@ -89,13 +90,17 @@ The core invariant is deliberately simple:
 
 See [architecture](docs/architecture.md), [evaluation](docs/evaluation.md), [system card](docs/system-card.md), [threat model](docs/threat-model.md), [NFR matrix](docs/nfr-matrix.md), and the [CV evidence ledger](docs/cv-evidence-ledger.md).
 
+The second-pass [audit and remediation record](docs/audit-and-remediation.md) lists the specific credibility, accessibility, interaction, evidence and security defects found, how each was fixed, and what remains deliberately out of scope.
+
 ## Evidence limitations
 
 The generator simplifies label delay, adversarial adaptation, investigator inconsistency and customer behaviour. The 60 displayed alerts are a curated extract of the top-ranked result set. Synthetic latency is modelled, not produced by a controlled load test. Before any live pilot, the open gates are forward-time shadow outcomes, security and privacy assurance, accessibility testing, subgroup review, recovery exercises and formal model-risk acceptance.
 
+The role headers used by the local decision API are an executable separation-of-duties demonstration, not production authentication. The decision store is intentionally process-local; the documented AWS target uses workforce identity and a durable ledger.
+
 ## Long-term blueprint
 
-The bundled [75-page delivery blueprint](public/pulseledger-blueprint.pdf) covers discovery, service design, streaming data, graph modelling, agentic workflows, MLOps, resilience, governance, delivery sequence, interview evidence and CV positioning. It is the programme contract behind this implementation.
+The bundled [75-page delivery blueprint](public/payment-risk-workbench-blueprint.pdf) covers discovery, service design, streaming data, graph modelling, assisted workflows, MLOps, resilience, governance, delivery sequence, interview evidence and CV positioning. It is the programme contract behind this implementation.
 
 ## Licence
 

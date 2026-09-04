@@ -13,7 +13,7 @@ import {
   UserRound,
   WalletCards,
 } from "lucide-react";
-import { alerts, policies, reasonCodes } from "@/lib/data";
+import { alerts, policies, reasonCodesFor } from "@/lib/data";
 import type { InvestigationDecision, PaymentAlert } from "@/lib/types";
 import { Badge, Header, Panel, Section } from "../primitives";
 const gbp = new Intl.NumberFormat("en-GB", {
@@ -24,44 +24,70 @@ const gbp = new Intl.NumberFormat("en-GB", {
 export function InvestigationView() {
   const [alert, setAlert] = useState<PaymentAlert>(alerts[0]),
     [decision, setDecision] = useState<InvestigationDecision | null>(null),
-    [notice, setNotice] = useState("");
+    [notice, setNotice] = useState(""),
+    [working, setWorking] = useState<"proposal" | "approval" | null>(null);
   useEffect(() => {
     const id = sessionStorage.getItem("pulse-alert");
     const found = alerts.find((a) => a.id === id);
     if (found) requestAnimationFrame(() => setAlert(found));
   }, []);
+  const reasonCodes = reasonCodesFor(alert);
   async function propose() {
     setNotice("");
-    const r = await fetch("/api/decisions", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ alertId: alert.id }),
-    });
-    setDecision(await r.json());
+    setWorking("proposal");
+    try {
+      const r = await fetch("/api/decisions", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-demo-role": "investigator",
+          "x-actor-id": "investigator-042",
+          "idempotency-key": `proposal-${alert.id}`,
+        },
+        body: JSON.stringify({ alertId: alert.id }),
+      });
+      const body = await r.json();
+      if (!r.ok) throw new Error(body.error ?? "Proposal could not be prepared");
+      setDecision(body);
+      setNotice("Proposal prepared for an independent supervisor review.");
+    } catch (cause) {
+      setNotice(cause instanceof Error ? cause.message : "Proposal could not be prepared");
+    } finally {
+      setWorking(null);
+    }
   }
   async function approve() {
     if (!decision) return;
-    const r = await fetch("/api/decisions", {
-      method: "PUT",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        decisionId: decision.id,
-        payloadHash: decision.payloadHash,
-        approver: "Pablo Williams",
-      }),
-    });
-    const body = await r.json();
-    if (r.ok) {
+    setWorking("approval");
+    try {
+      const r = await fetch("/api/decisions", {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+          "x-demo-role": "supervisor",
+          "x-actor-id": "supervisor-007",
+        },
+        body: JSON.stringify({
+          decisionId: decision.id,
+          payloadHash: decision.payloadHash,
+        }),
+      });
+      const body = await r.json();
+      if (!r.ok) throw new Error(body.error ?? "Approval could not be recorded");
       setDecision(body);
-      setNotice("The exact time-limited decision was approved in simulation.");
-    } else setNotice(body.error);
+      setNotice("Supervisor approval recorded for the exact, time-limited payload.");
+    } catch (cause) {
+      setNotice(cause instanceof Error ? cause.message : "Approval could not be recorded");
+    } finally {
+      setWorking(null);
+    }
   }
   return (
     <div className="stack">
       <Header
         eyebrow={`Investigation / ${alert.id}`}
-        title="Make the evidence challengeable."
-        description="One workspace for transaction behaviour, identity, network context, model reasoning, policy and a proportionate human decision."
+        title="Review payment evidence"
+        description="Transaction behaviour, identity, network context, model reasoning and policy are shown together before a supervisor records a decision."
         actions={
           <>
             <Badge tone={alert.ensembleScore >= 0.9 ? "red" : "amber"}>
@@ -100,7 +126,7 @@ export function InvestigationView() {
               <div>
                 <Smartphone size={14} />
                 <span>
-                  Device tenure<b>First seen today</b>
+                  Device tenure<b>{alert.signals.newDevice ? "First seen today" : "Recognised"}</b>
                 </span>
               </div>
               <div>
@@ -133,8 +159,12 @@ export function InvestigationView() {
                 <i />
                 <span>15:48</span>
                 <article>
-                  <b>New device enrolled</b>
-                  <p>Device fingerprint has no prior relationship with this customer.</p>
+                  <b>{alert.signals.newDevice ? "New device observed" : "Known device observed"}</b>
+                  <p>
+                    {alert.signals.newDevice
+                      ? "The device fingerprint has no prior relationship with this customer."
+                      : "The device fingerprint has an existing relationship with this customer."}
+                  </p>
                 </article>
               </div>
               <div>
@@ -143,8 +173,9 @@ export function InvestigationView() {
                 <article>
                   <b>Authentication failures</b>
                   <p>
-                    {alert.signals.failedAuth24h} failed attempts observed before successful
-                    authentication.
+                    {alert.signals.failedAuth24h === 0
+                      ? "No failed attempts were observed in the prior 24 hours."
+                      : `${alert.signals.failedAuth24h} failed attempts were observed before successful authentication.`}
                   </p>
                 </article>
               </div>
@@ -152,7 +183,7 @@ export function InvestigationView() {
                 <i />
                 <span>16:17</span>
                 <article>
-                  <b>Beneficiary created</b>
+                  <b>Beneficiary age reviewed</b>
                   <p>
                     Recipient age {alert.signals.recipientAgeDays} days; connected to elevated-risk
                     neighbours.
@@ -238,12 +269,12 @@ export function InvestigationView() {
             {!decision && (
               <>
                 <p>
-                  The system may assemble and propose. Only a named investigator may approve a
-                  customer-impacting action.
+                  An investigator can prepare a proposal. A different, named supervisor must approve
+                  any customer-impacting action.
                 </p>
-                <button className="primary wide" onClick={propose}>
+                <button className="primary wide" onClick={propose} disabled={working !== null}>
                   <LockKeyhole size={14} />
-                  Prepare decision proposal
+                  {working === "proposal" ? "Preparing proposal…" : "Prepare decision proposal"}
                 </button>
               </>
             )}
@@ -262,17 +293,31 @@ export function InvestigationView() {
                     </li>
                   ))}
                 </ul>
+                <dl className="proposal-meta">
+                  <div>
+                    <dt>Prepared by</dt>
+                    <dd>{decision.proposedBy}</dd>
+                  </div>
+                  <div>
+                    <dt>Scope</dt>
+                    <dd>{decision.actionScope.replaceAll("_", " ")}</dd>
+                  </div>
+                  <div>
+                    <dt>Expires</dt>
+                    <dd>{new Date(decision.expiresAt).toLocaleTimeString("en-GB")}</dd>
+                  </div>
+                </dl>
                 <code>{decision.payloadHash}</code>
                 {decision.status === "awaiting_approval" && (
-                  <button className="primary wide" onClick={approve}>
+                  <button className="primary wide" onClick={approve} disabled={working !== null}>
                     <ShieldCheck size={14} />
-                    Approve exact payload
+                    {working === "approval" ? "Recording approval…" : "Approve exact payload"}
                   </button>
                 )}
               </div>
             )}
             {notice && (
-              <div className="notice">
+              <div className="notice" role="status" aria-live="polite">
                 <CheckCircle2 size={14} />
                 {notice}
               </div>

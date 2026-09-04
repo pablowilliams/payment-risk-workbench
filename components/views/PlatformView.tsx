@@ -1,7 +1,10 @@
+"use client";
+import { useState } from "react";
 import {
   Activity,
   Archive,
   ArrowRight,
+  CheckCircle2,
   Database,
   GitBranch,
   HardDrive,
@@ -14,20 +17,48 @@ import {
 import { backtest, pipeline } from "@/lib/data";
 import { Badge, Header, Metric, Panel, Section } from "../primitives";
 export function PlatformView() {
+  const [reconciliation, setReconciliation] = useState<{
+    fingerprint: string;
+    checks: Record<string, boolean>;
+  } | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [error, setError] = useState("");
+  async function verifyEvidence() {
+    setChecking(true);
+    setError("");
+    try {
+      const response = await fetch("/api/reconciliation");
+      const body = await response.json();
+      if (!response.ok || body.status !== "verified") throw new Error("Evidence checks failed");
+      setReconciliation(body);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Evidence could not be checked");
+    } finally {
+      setChecking(false);
+    }
+  }
   return (
     <div className="stack">
       <Header
         eyebrow="Data platform / Streaming estate"
-        title="A million events with lineage intact."
-        description="Replayable contracts connect payment ingestion, event-time features, graph enrichment, detection, alerts and immutable decisions."
+        title="Payment event pipeline"
+        description="Replayable contracts connect ingestion, event-time features, graph enrichment, detection, alerts and the decision audit record."
         actions={
           <>
             <Badge tone="green">
               <RadioTower size={11} />6 / 6 contracts healthy
             </Badge>
-            <button className="secondary">
+            <button
+              className="secondary"
+              onClick={verifyEvidence}
+              disabled={checking || reconciliation !== null}
+            >
               <RotateCcw size={13} />
-              Replay controls
+              {checking
+                ? "Checking evidence…"
+                : reconciliation
+                  ? "Evidence verified"
+                  : "Verify evidence pack"}
             </button>
           </>
         }
@@ -54,6 +85,21 @@ export function PlatformView() {
           tone="amber"
         />
       </div>
+      {reconciliation && (
+        <div className="replay-result" role="status" aria-live="polite">
+          <CheckCircle2 size={16} />
+          <span>
+            <b>{Object.keys(reconciliation.checks).length} evidence checks passed</b>
+            Fingerprint {reconciliation.fingerprint.slice(0, 16)}… · checked-in synthetic evidence
+          </span>
+          <button onClick={() => setReconciliation(null)}>Clear result</button>
+        </div>
+      )}
+      {error && (
+        <div className="replay-result error" role="alert">
+          {error}
+        </div>
+      )}
       <Panel>
         <Section
           eyebrow="Event backbone"

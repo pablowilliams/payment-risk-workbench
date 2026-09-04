@@ -6,7 +6,7 @@ export const alerts = rawAlerts as PaymentAlert[];
 export const programme = {
   institution: "Verdant Bank",
   environment: "Synthetic evaluation",
-  decision: "Approve a twelve-week shadow-mode investigation pilot",
+  decision: "Recommend a twelve-week shadow-mode pilot after the two open gates close",
   sponsor: "Director of Financial Crime Operations",
   investigatorCapacity: 10000,
   serviceLevel: "30 minutes",
@@ -32,20 +32,30 @@ export const graphEdges: GraphEdge[] = [
   { source: "beneficiary", target: "merchant", label: "funded", weight: 0.7 },
   { source: "linked1", target: "beneficiary", label: "paid", weight: 0.83 },
 ];
-export const reasonCodes = [
-  {
-    name: "Shared device network",
-    value: 94,
-    detail: "Device connects three recently active accounts",
-  },
-  {
-    name: "Risky-neighbour ratio",
-    value: 88,
-    detail: "0.71 of weighted neighbours exceed threshold",
-  },
-  { name: "New beneficiary", value: 76, detail: "Recipient first observed six days ago" },
-  { name: "Transaction velocity", value: 69, detail: "Nine payments in the last hour" },
-];
+export function reasonCodesFor(alert: PaymentAlert) {
+  return [
+    {
+      name: "Shared device network",
+      value: Math.min(100, 35 + alert.signals.sharedDevices * 6),
+      detail: `${alert.signals.sharedDevices} accounts share the observed device`,
+    },
+    {
+      name: "Risky-neighbour ratio",
+      value: Math.round(alert.signals.riskyNeighborRatio * 100),
+      detail: `${alert.signals.riskyNeighborRatio.toFixed(2)} of weighted neighbours exceed threshold`,
+    },
+    {
+      name: "Beneficiary recency",
+      value: Math.max(0, 100 - Math.min(100, alert.signals.recipientAgeDays * 4)),
+      detail: `Recipient first observed ${alert.signals.recipientAgeDays} days ago`,
+    },
+    {
+      name: "Transaction velocity",
+      value: Math.min(100, alert.signals.velocity1h * 8),
+      detail: `${alert.signals.velocity1h} payments observed in the last hour`,
+    },
+  ];
+}
 export const pipeline = [
   { name: "payment.raw", rate: "2,840/s", lag: "18 ms", quality: 99.99, status: "healthy" },
   { name: "payment.validated", rate: "2,837/s", lag: "31 ms", quality: 99.97, status: "healthy" },

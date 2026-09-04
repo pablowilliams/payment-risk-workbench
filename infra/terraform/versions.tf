@@ -12,7 +12,7 @@ provider "aws" {
   region = var.aws_region
   default_tags {
     tags = {
-      Project     = "PulseLedger"
+      Project     = "Payment Risk Workbench"
       Environment = var.environment
       ManagedBy   = "Terraform"
       DataClass   = "synthetic-demo"

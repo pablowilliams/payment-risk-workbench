@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the exactly 75-page PulseLedger long-term delivery blueprint."""
+"""Generate the exactly 75-page Payment Risk Workbench long-term delivery blueprint."""
 
 from pathlib import Path
 import textwrap
@@ -10,7 +10,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen.canvas import Canvas
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT.parent / "output" / "pdf" / "pulseledger-long-term-delivery-blueprint.pdf"
+OUT = ROOT.parent / "output" / "pdf" / "payment-risk-workbench-delivery-blueprint.pdf"
 W, H = A4
 INK = HexColor("#17201c")
 NAVY = HexColor("#10251f")
@@ -131,7 +131,7 @@ PHASES = [
     ),
     (
         "03",
-        "Detection and graph intelligence",
+        "Detection and relationship analysis",
         "Combine interpretable rules, tabular models and network signals under a fixed alert budget.",
         [
             (
@@ -179,7 +179,7 @@ PHASES = [
     (
         "04",
         "Investigation agent and workflow",
-        "Use AI to assemble evidence and draft decisions while keeping consequential authority human.",
+        "Use language models only to assemble evidence and draft decisions while keeping consequential authority human.",
         [
             (
                 "Agent purpose and boundaries",
@@ -391,13 +391,13 @@ class Book:
         OUT.parent.mkdir(parents=True, exist_ok=True)
         self.c = Canvas(str(OUT), pagesize=A4)
         self.p = 0
-        self.c.setTitle("PulseLedger - 75-Page Long-Term Delivery Blueprint")
+        self.c.setTitle("Payment Risk Workbench - 75-Page Long-Term Delivery Blueprint")
         self.c.setAuthor("Pablo Williams")
         self.c.setSubject(
             "Human-centred real-time financial crime platform delivery plan"
         )
 
-    def page(self, section="PULSELEDGER LONG-TERM DELIVERY BLUEPRINT"):
+    def page(self, section="PAYMENT RISK WORKBENCH / DELIVERY BLUEPRINT"):
         if self.p:
             self.c.showPage()
         self.p += 1
@@ -483,17 +483,17 @@ def cover(b):
     c.drawCentredString(69, H - 91, "P")
     c.setFillColor(ACID)
     c.setFont("Mono", 8)
-    c.drawString(48, H - 140, "PULSELEDGER / PROGRAMME BLUEPRINT")
+    c.drawString(48, H - 140, "PAYMENT RISK WORKBENCH / DELIVERY BLUEPRINT")
     c.setFillColor(white)
     c.setFont("SerifB", 42)
     y = H - 205
-    for line in ["Real-Time Financial", "Crime Intelligence"]:
+    for line in ["Payment Risk", "Investigation", "Workbench"]:
         c.drawString(48, y, line)
         y -= 49
     c.setFillColor(HexColor("#c1d1c8"))
     c.setFont("Sans", 13)
     for line in [
-        "A human-centred, graph-aware data and AI platform",
+        "A payment-risk investigation and data platform",
         "planned as a twelve-month portfolio programme.",
     ]:
         c.drawString(50, y, line)
@@ -538,7 +538,7 @@ def contents(b):
     y = b.head(
         "Contents",
         "Seventy-five pages, seven connected workstreams",
-        "The plan moves from human decisions to data, intelligence, controlled agency, operations, assurance and portfolio proof.",
+        "The plan moves from investigator decisions to data, analysis, controlled assistance, operations, assurance and portfolio proof.",
     )
     for n, title, purpose, _ in PHASES:
         b.card(42, y - 68, W - 84, 57)
@@ -685,7 +685,7 @@ def build():
         b,
         "Executive decision",
         "Build a decision platform, not a fraud dashboard",
-        "PulseLedger should prove that real-time data, machine learning, graph intelligence and controlled AI can improve investigator focus without hiding customer consequences.",
+        "Payment Risk Workbench should test whether real-time data, machine learning, relationship analysis and controlled drafting support can improve investigator focus without hiding customer consequences.",
         [
             (
                 "Programme thesis",
@@ -740,7 +740,7 @@ def build():
                 "Research investigators, define harm and metrics, build the event contract, generator, replay backbone, rules baseline and first human queue.",
             ),
             (
-                "Quarter 2 - intelligence",
+                "Quarter 2 - detection",
                 "Add time-safe features, tabular model, Neo4j domain, graph features, calibrated ensemble, evaluation harness and evidence explanations.",
             ),
             (
@@ -781,7 +781,7 @@ def build():
                 "Flink or Lambda for stateful enrichment",
                 "S3 and Iceberg for historical data products",
                 "SageMaker or container model serving",
-                "Neptune or Neo4j Aura for graph intelligence",
+                "Neptune or Neo4j Aura for relationship analysis",
                 "EKS, ECS or Lambda chosen by workload evidence",
             ],
         ),

@@ -51,8 +51,8 @@ export function GovernanceView() {
     <div className="stack">
       <Header
         eyebrow="Governance / Decision assurance"
-        title="Reconstruct every consequential decision."
-        description="Controls link human authority, data lineage, model evidence, customer outcomes and operational response - with named owners and visible residual work."
+        title="Decision controls and audit trail"
+        description="Named control owners connect human authority, data lineage, model evidence, customer outcomes and operational response."
         actions={
           <Badge tone="amber">
             <AlertTriangle size={11} />2 pilot gates open
@@ -65,12 +65,12 @@ export function GovernanceView() {
           <div className="assurance-score">
             <div>
               <span>
-                <strong>84</strong>
-                <small>/100</small>
+                <strong>3</strong>
+                <small>/5 effective</small>
               </span>
             </div>
             <aside>
-              <b>Strong evidence, bounded authority</b>
+              <b>Three controls effective; two gates remain open</b>
               <p>
                 Ready for controlled investigation support. Not approved for autonomous restriction
                 or customer communication.

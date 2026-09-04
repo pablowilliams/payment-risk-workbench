@@ -22,14 +22,14 @@ export function CommandView({ go }: { go: (v: string) => void }) {
   return (
     <div className="stack">
       <Header
-        eyebrow="Operations / 04 September 2026 · 16:42 BST"
-        title="Protect attention. Preserve judgment."
-        description="A live operating picture of payment risk, investigator capacity, customer consequences and platform health."
+        eyebrow="Operations / Evaluation snapshot · 04 September 2026"
+        title="Payment risk overview"
+        description="Synthetic payment risk, investigation capacity, customer safeguards and service health in one operating view."
         actions={
           <>
             <Badge tone="green">
               <RadioTower size={11} />
-              Stream healthy
+              Fixture healthy
             </Badge>
             <button className="primary" onClick={() => go("alerts")}>
               Open alert queue <ArrowRight size={14} />
@@ -50,9 +50,9 @@ export function CommandView({ go }: { go: (v: string) => void }) {
           </p>
         </div>
         <aside>
-          <span>Evidence confidence</span>
-          <strong>84</strong>
-          <small>/ 100</small>
+          <span>Release evidence</span>
+          <strong>6</strong>
+          <small>/ 7 gates</small>
         </aside>
       </Panel>
       <div className="metrics">
@@ -87,7 +87,7 @@ export function CommandView({ go }: { go: (v: string) => void }) {
       <div className="grid command-grid">
         <Panel>
           <Section
-            eyebrow="Investigation pressure"
+            eyebrow="Scenario queue · Synthetic fixture"
             title="Capacity is the binding constraint"
             detail="Alert demand is held to the agreed one-percent budget."
           />
@@ -122,7 +122,7 @@ export function CommandView({ go }: { go: (v: string) => void }) {
           </button>
         </Panel>
         <Panel>
-          <Section eyebrow="Detection portfolio" title="One budget. Three strategies." />
+          <Section eyebrow="Detection comparison" title="One budget, three strategies" />
           <div className="model-bars">
             {Object.entries(backtest.models).map(([name, m]) => (
               <div key={name}>

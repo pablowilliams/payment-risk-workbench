@@ -8,7 +8,7 @@ Risk ranking can reduce investigative search cost, but false positives create di
 
 ## Decision
 
-Automated components may assemble evidence and propose a bounded action. A material action requires an authorised human, an exact payload hash, a time limit, stated rationale and an immutable audit record. Mutation produces a new proposal. Read-only access remains available when the proposal kill switch is active.
+Automated components may assemble evidence and propose a bounded action. A material action requires an authorised supervisor who is different from the proposer, a full SHA-256 payload hash, a time limit, stated rationale and an immutable audit record. Mutation produces a new proposal. Read-only access remains available when the proposal kill switch is active.
 
 ## Consequences
 

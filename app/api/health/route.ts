@@ -5,7 +5,7 @@ export function GET() {
   return NextResponse.json(
     {
       status: "healthy",
-      service: "pulseledger",
+      service: "payment-risk-workbench",
       version: "1.0.0",
       mode: "portfolio-simulation",
       time: new Date().toISOString(),

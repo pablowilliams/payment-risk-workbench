@@ -1,7 +1,7 @@
 asyncapi: 3.0.0
 info:
   {
-    title: PulseLedger Event Backbone,
+    title: Payment Risk Workbench Event Backbone,
     version: 1.0.0,
     description: Replayable payment-risk contracts with event-time identity.,
   }

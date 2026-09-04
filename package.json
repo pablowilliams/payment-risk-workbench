@@ -1,5 +1,5 @@
 {
-  "name": "pulseledger",
+  "name": "payment-risk-workbench",
   "version": "1.0.0",
   "private": true,
   "engines": {
@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "next dev --port 3003",
     "build": "next build",
-    "start": "next start --port 3003",
+    "start": "PORT=3003 HOSTNAME=0.0.0.0 node .next/standalone/server.js",
     "lint": "eslint . --ignore-pattern .next",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

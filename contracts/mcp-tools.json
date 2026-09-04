@@ -1,5 +1,5 @@
 {
-  "server": "pulseledger-investigation",
+  "server": "payment-risk-workbench-investigation",
   "version": "1.0.0",
   "boundary": "Read and propose only. No tool autonomously restricts a customer account.",
   "tools": [

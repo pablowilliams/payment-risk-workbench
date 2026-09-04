@@ -2,7 +2,7 @@
 
 ## Intended use
 
-PulseLedger helps trained financial-crime investigators prioritise payment alerts, inspect behavioural and graph evidence, consult policy, and prepare a proportionate decision for named human approval.
+Payment Risk Workbench helps trained financial-crime investigators prioritise payment alerts, inspect behavioural and graph evidence, consult policy, and prepare a proportionate decision for named human approval.
 
 ## Excluded use
 
@@ -11,6 +11,8 @@ The system must not autonomously block an account, terminate a customer relation
 ## Authority model
 
 The machine may search, rank, summarise and propose. Only an authorised human may approve a material action. Approval binds the reviewer to the exact payload hash, scope and duration. Any amendment invalidates the prior approval. A kill switch disables material proposals while preserving read-only evidence access.
+
+The local API uses explicit demo-role and actor headers to exercise separation of duties. These headers are not authentication and must be replaced by verified workforce identity and policy enforcement in a deployed service.
 
 ## Evidence and explanations
 

@@ -1,4 +1,4 @@
-import { PulseLedgerApp } from "@/components/PulseLedgerApp";
+import { PaymentRiskWorkbench } from "@/components/PaymentRiskWorkbench";
 export default function Page() {
-  return <PulseLedgerApp />;
+  return <PaymentRiskWorkbench />;
 }

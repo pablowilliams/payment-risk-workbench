@@ -1,49 +1,123 @@
 "use client";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Focus, Maximize2, Network, Search, Share2, ZoomIn, ZoomOut } from "lucide-react";
 import { graphEdges, graphNodes } from "@/lib/data";
 import { Badge, Header, Panel, Section } from "../primitives";
 export function GraphView() {
+  const entityTypes = ["customer", "account", "device", "beneficiary", "merchant", "ip"] as const;
   const [selected, setSelected] = useState(graphNodes[0]);
+  const [query, setQuery] = useState("");
+  const [enabledTypes, setEnabledTypes] = useState<Set<string>>(new Set(entityTypes));
+  const [depth, setDepth] = useState(2);
+  const [zoom, setZoom] = useState(1);
+  const [focusMode, setFocusMode] = useState(false);
+  const visibleNodes = useMemo(() => {
+    const distances = new Map([[selected.id, 0]]);
+    const queue = [selected.id];
+    while (queue.length) {
+      const current = queue.shift()!;
+      const distance = distances.get(current)!;
+      if (distance >= depth) continue;
+      for (const edge of graphEdges) {
+        const neighbor =
+          edge.source === current ? edge.target : edge.target === current ? edge.source : null;
+        if (neighbor && !distances.has(neighbor)) {
+          distances.set(neighbor, distance + 1);
+          queue.push(neighbor);
+        }
+      }
+    }
+    const needle = query.trim().toLowerCase();
+    return graphNodes.filter(
+      (node) =>
+        distances.has(node.id) &&
+        enabledTypes.has(node.type) &&
+        (!needle || `${node.label} ${node.id} ${node.type}`.toLowerCase().includes(needle)),
+    );
+  }, [depth, enabledTypes, query, selected.id]);
+  const visibleIds = new Set(visibleNodes.map((node) => node.id));
+  const visibleEdges = graphEdges.filter(
+    (edge) => visibleIds.has(edge.source) && visibleIds.has(edge.target),
+  );
+  function toggleType(type: string) {
+    setEnabledTypes((current) => {
+      const next = new Set(current);
+      if (next.has(type)) next.delete(type);
+      else next.add(type);
+      return next;
+    });
+  }
+  function resetGraph() {
+    setSelected(graphNodes[0]);
+    setEnabledTypes(new Set(entityTypes));
+    setQuery("");
+    setDepth(2);
+    setZoom(1);
+  }
   return (
     <div className="stack">
       <Header
-        eyebrow="Graph intelligence / Connected entities"
-        title="See the network. Keep the inference honest."
-        description="Explore relationships between synthetic customers, accounts, devices, IP addresses, beneficiaries and merchants. Connections are evidence, not guilt."
+        eyebrow="Relationship analysis / Connected entities"
+        title="Account and device relationships"
+        description="Inspect bounded connections between synthetic customers, accounts, devices, IP addresses, beneficiaries and merchants. A connection is evidence for review, not proof of intent."
         actions={
           <>
             <Badge tone="green">
-              <Network size={11} />8 nodes · 8 relationships
+              <Network size={11} />
+              {visibleNodes.length} nodes · {visibleEdges.length} relationships
             </Badge>
-            <button className="secondary">
+            <button
+              className="secondary"
+              onClick={() => setFocusMode((current) => !current)}
+              aria-pressed={focusMode}
+            >
               <Maximize2 size={13} />
-              Focus mode
+              {focusMode ? "Show controls" : "Focus graph"}
             </button>
           </>
         }
       />
-      <div className="graph-layout">
+      <div className={`graph-layout ${focusMode ? "focused" : ""}`}>
         <Panel className="graph-tools">
           <Section eyebrow="Graph controls" title="Investigation scope" />
           <label>
             <Search size={13} />
-            <input placeholder="Find node or account" />
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Find node or account"
+              aria-label="Find a graph entity"
+            />
           </label>
           <div className="graph-filters">
-            {["Customer", "Account", "Device", "Beneficiary", "Merchant", "IP"].map((x, i) => (
-              <button key={x}>
+            {entityTypes.map((type, i) => (
+              <button
+                key={type}
+                onClick={() => toggleType(type)}
+                className={enabledTypes.has(type) ? "active" : ""}
+                aria-pressed={enabledTypes.has(type)}
+              >
                 <i className={`c${i}`} />
-                {x}
-                <span>{graphNodes.filter((n) => n.type === x.toLowerCase()).length}</span>
+                {type === "ip" ? "IP" : `${type[0].toUpperCase()}${type.slice(1)}`}
+                <span>{graphNodes.filter((node) => node.type === type).length}</span>
               </button>
             ))}
           </div>
           <div className="depth">
             <span>
-              Traversal depth<b>2 hops</b>
+              Traversal depth
+              <b>
+                {depth} {depth === 1 ? "hop" : "hops"}
+              </b>
             </span>
-            <input type="range" min="1" max="4" defaultValue="2" />
+            <input
+              type="range"
+              min="1"
+              max="4"
+              value={depth}
+              onChange={(event) => setDepth(Number(event.target.value))}
+              aria-label="Graph traversal depth"
+            />
           </div>
           <p>Expansion is capped to prevent misleading hairball graphs and unbounded queries.</p>
         </Panel>
@@ -54,38 +128,55 @@ export function GraphView() {
               Investigation subgraph
             </span>
             <div>
-              <button>
+              <button
+                onClick={() => setZoom((value) => Math.max(0.75, value - 0.1))}
+                aria-label="Zoom out"
+              >
                 <ZoomOut size={14} />
               </button>
-              <button>
+              <button
+                onClick={() => setZoom((value) => Math.min(1.35, value + 0.1))}
+                aria-label="Zoom in"
+              >
                 <ZoomIn size={14} />
               </button>
-              <button>
+              <button onClick={resetGraph} aria-label="Reset graph">
                 <Focus size={14} />
               </button>
             </div>
           </div>
           <div className="graph-stage">
+            {visibleNodes.length === 0 && (
+              <p className="graph-empty">No entities match the current scope.</p>
+            )}
             <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-              {graphEdges.map((e, i) => {
+              {visibleEdges.map((e, i) => {
                 const a = graphNodes.find((n) => n.id === e.source)!,
                   b = graphNodes.find((n) => n.id === e.target)!;
+                const ax = 50 + (a.x - 50) * zoom,
+                  ay = 50 + (a.y - 50) * zoom,
+                  bx = 50 + (b.x - 50) * zoom,
+                  by = 50 + (b.y - 50) * zoom;
                 return (
                   <g key={i}>
-                    <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} />
-                    <text x={(a.x + b.x) / 2} y={(a.y + b.y) / 2 - 1}>
+                    <line x1={ax} y1={ay} x2={bx} y2={by} />
+                    <text x={(ax + bx) / 2} y={(ay + by) / 2 - 1}>
                       {e.label}
                     </text>
                   </g>
                 );
               })}
             </svg>
-            {graphNodes.map((n) => (
+            {visibleNodes.map((n) => (
               <button
                 key={n.id}
                 onClick={() => setSelected(n)}
                 className={`graph-node ${n.type} ${selected.id === n.id ? "active" : ""}`}
-                style={{ left: `${n.x}%`, top: `${n.y}%` }}
+                style={{
+                  left: `${50 + (n.x - 50) * zoom}%`,
+                  top: `${50 + (n.y - 50) * zoom}%`,
+                }}
+                aria-pressed={selected.id === n.id}
               >
                 <Share2 size={13} />
                 <span>{n.label}</span>

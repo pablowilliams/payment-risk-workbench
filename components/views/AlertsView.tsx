@@ -10,7 +10,8 @@ const gbp = new Intl.NumberFormat("en-GB", {
 });
 export function AlertsView({ go }: { go: (v: string) => void }) {
   const [q, setQ] = useState(""),
-    [risk, setRisk] = useState("All");
+    [risk, setRisk] = useState("All"),
+    [compact, setCompact] = useState(false);
   const rows = useMemo(
     () =>
       alerts.filter(
@@ -25,11 +26,11 @@ export function AlertsView({ go }: { go: (v: string) => void }) {
     <div className="stack">
       <Header
         eyebrow="Investigations / Prioritised queue"
-        title="The few cases that deserve attention."
-        description="Alerts are ranked by expected customer and financial consequence within a fixed investigator capacity - not by score alone."
+        title="Prioritised payment alerts"
+        description="The queue is ranked within a fixed investigator capacity. Exposure and customer impact remain visible alongside model risk."
         actions={<Badge tone="green">10,000 annual alert budget</Badge>}
       />
-      <Panel>
+      <Panel className={compact ? "compact-queue" : ""}>
         <div className="queue-tools">
           <label>
             <Search size={14} />
@@ -37,9 +38,10 @@ export function AlertsView({ go }: { go: (v: string) => void }) {
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search customer, payment or pattern"
+              aria-label="Search payment alerts"
             />
           </label>
-          <div>
+          <div role="group" aria-label="Alert risk filter">
             <Filter size={13} />
             {["All", "Critical", "Elevated"].map((x) => (
               <button key={x} className={risk === x ? "active" : ""} onClick={() => setRisk(x)}>
@@ -47,9 +49,9 @@ export function AlertsView({ go }: { go: (v: string) => void }) {
               </button>
             ))}
           </div>
-          <button>
+          <button onClick={() => setCompact((value) => !value)} aria-pressed={compact}>
             <SlidersHorizontal size={13} />
-            Columns
+            {compact ? "Comfortable rows" : "Compact rows"}
           </button>
         </div>
         <div className="queue-summary">

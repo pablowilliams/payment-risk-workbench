@@ -1,6 +1,6 @@
 # Architecture
 
-PulseLedger is a portfolio-grade reference implementation for human-centred, real-time financial-crime investigation. It separates a locally runnable proof from a production AWS target so interview discussion remains technically ambitious and commercially honest.
+Payment Risk Workbench is a portfolio-grade reference implementation for human-centred, real-time financial-crime investigation. It separates a locally runnable proof from a production AWS target so interview discussion remains technically ambitious and commercially honest.
 
 ```mermaid
 flowchart LR

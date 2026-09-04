@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   {
-    title: PulseLedger Investigation API,
+    title: Payment Risk Workbench Investigation API,
     version: 1.0.0,
     description: Human-authorised decision support over synthetic portfolio evidence.,
   }
@@ -17,10 +17,19 @@ paths:
         - { in: query, name: minimumRisk, schema: { type: number, minimum: 0, maximum: 1 } }
         - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 60 } }
       responses: { "200": { description: Ranked synthetic alert sample } }
+  /api/reconciliation:
+    get:
+      operationId: reconcileEvidence
+      description: Reconciles the checked-in synthetic evidence pack and returns its SHA-256 fingerprint.
+      responses: { "200": { description: Evidence check results } }
   /api/decisions:
     post:
       operationId: proposeDecision
       description: Assembles a recommendation but never executes a customer action.
+      parameters:
+        - { in: header, name: x-demo-role, required: true, schema: { const: investigator } }
+        - { in: header, name: x-actor-id, required: true, schema: { type: string } }
+        - { in: header, name: idempotency-key, required: false, schema: { type: string } }
       requestBody:
         {
           required: true,
@@ -36,6 +45,9 @@ paths:
     put:
       operationId: approveDecision
       description: Approves only the immutable payload represented by payloadHash.
+      parameters:
+        - { in: header, name: x-demo-role, required: true, schema: { const: supervisor } }
+        - { in: header, name: x-actor-id, required: true, schema: { type: string } }
       requestBody:
         {
           required: true,
@@ -54,11 +66,10 @@ components:
     ApprovalRequest:
       {
         type: object,
-        required: [decisionId, payloadHash, approver],
+        required: [decisionId, payloadHash],
         properties:
           {
             decisionId: { type: string },
-            payloadHash: { type: string, minLength: 20, maxLength: 20 },
-            approver: { type: string },
+            payloadHash: { type: string, minLength: 64, maxLength: 64 },
           },
       }

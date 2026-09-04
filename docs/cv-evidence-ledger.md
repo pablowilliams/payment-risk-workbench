@@ -12,4 +12,4 @@ Use claims that can be opened, rerun and challenged.
 | Delivered a senior operational interface                         | seven working views and responsive design              | fixtures represent a plausible operating state         |
 | Established delivery governance                                  | NFR matrix, system card, threat model, runbooks and CI | production validation gates remain explicitly open     |
 
-Suggested CV bullet: “Designed and built PulseLedger, a human-authorised financial-crime investigation platform; evaluated rules, tabular and graph detection over 1.0m fixed-seed synthetic payments, where the graph ensemble improved recall by 8.2pp at the same 1% alert budget, with reproducible tests, event/API contracts and AWS IaC.”
+Suggested CV bullet: “Designed and built Payment Risk Workbench, a human-authorised financial-crime investigation platform; evaluated rules, tabular and graph detection over 1.0m fixed-seed synthetic payments, where the graph ensemble improved recall by 8.2pp at the same 1% alert budget, with reproducible tests, event/API contracts and AWS IaC.”

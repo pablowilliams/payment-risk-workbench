@@ -10,7 +10,7 @@ variable "environment" {
 
 variable "project_name" {
   type    = string
-  default = "pulseledger"
+  default = "payment-risk-workbench"
 }
 
 variable "retention_days" {

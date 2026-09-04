@@ -33,8 +33,12 @@ export interface InvestigationDecision {
   recommendedAction: "continue_monitoring" | "request_verification" | "temporary_payment_hold";
   rationale: string;
   evidence: string[];
+  actionScope: "outbound_payments";
+  durationHours: number;
   payloadHash: string;
   createdAt: string;
+  expiresAt: string;
+  proposedBy: string;
   approvedAt?: string;
   approver?: string;
 }
