@@ -1,0 +1,119 @@
+{
+  "metadata": {
+    "project": "PulseLedger",
+    "institution": "Verdant Bank (fictional)",
+    "seed": 7312026,
+    "events": 1000000,
+    "alert_budget": 10000,
+    "alert_rate_pct": 1.0,
+    "evaluation": "synthetic streamed holdout",
+    "claim_boundary": "Synthetic portfolio simulation only; not a production detection or banking outcome claim."
+  },
+  "population": {
+    "fraud_events": 14825,
+    "fraud_rate_pct": 1.48,
+    "fraud_value_gbp": 2365709
+  },
+  "models": {
+    "rules": {
+      "alerts": 10000,
+      "true_positives": 7999,
+      "precision_pct": 80.0,
+      "recall_pct": 54.0,
+      "fraud_value_capture_pct": 29.1,
+      "precision_95ci": [
+        0.7919,
+        0.8076
+      ],
+      "pattern_recall_pct": {
+        "mule_network": 19.0,
+        "synthetic_identity": 10.9,
+        "card_testing": 100.0,
+        "account_takeover": 70.2
+      }
+    },
+    "tabular": {
+      "alerts": 10000,
+      "true_positives": 8403,
+      "precision_pct": 84.0,
+      "recall_pct": 56.7,
+      "fraud_value_capture_pct": 16.8,
+      "precision_95ci": [
+        0.833,
+        0.8473
+      ],
+      "pattern_recall_pct": {
+        "mule_network": 0.1,
+        "synthetic_identity": 0.2,
+        "card_testing": 100.0,
+        "account_takeover": 99.0
+      }
+    },
+    "graph_ensemble": {
+      "alerts": 10000,
+      "true_positives": 9618,
+      "precision_pct": 96.2,
+      "recall_pct": 64.9,
+      "fraud_value_capture_pct": 55.0,
+      "precision_95ci": [
+        0.9579,
+        0.9654
+      ],
+      "pattern_recall_pct": {
+        "mule_network": 70.8,
+        "synthetic_identity": 4.5,
+        "card_testing": 98.2,
+        "account_takeover": 65.3
+      }
+    }
+  },
+  "uplift": {
+    "graph_recall_vs_tabular_pp": 8.2,
+    "graph_value_vs_tabular_pp": 38.2
+  },
+  "platform": {
+    "synthetic_scoring_p50_ms": 5.82,
+    "synthetic_scoring_p95_ms": 8.07,
+    "trace_coverage_pct": 100.0,
+    "duplicate_decisions": 0
+  },
+  "segments": [
+    {
+      "region": "London",
+      "events": 200000,
+      "fraud_events": 2921,
+      "fraud_rate_pct": 1.46
+    },
+    {
+      "region": "Midlands",
+      "events": 200000,
+      "fraud_events": 2994,
+      "fraud_rate_pct": 1.5
+    },
+    {
+      "region": "North West",
+      "events": 200000,
+      "fraud_events": 2965,
+      "fraud_rate_pct": 1.48
+    },
+    {
+      "region": "South East",
+      "events": 200000,
+      "fraud_events": 2994,
+      "fraud_rate_pct": 1.5
+    },
+    {
+      "region": "Scotland",
+      "events": 200000,
+      "fraud_events": 2951,
+      "fraud_rate_pct": 1.48
+    }
+  ],
+  "limitations": [
+    "All people, institutions, transactions, labels and outcomes are synthetic.",
+    "Scores are generated from designed distributions and do not establish real-world efficacy.",
+    "Synthetic scoring latency is a modelled service measure, not a cloud load test.",
+    "Fraud value capture is detected exposure, not recovered cash.",
+    "A production pilot requires time-based validation, fairness review, security testing and human oversight."
+  ]
+}

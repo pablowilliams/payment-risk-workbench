@@ -1,0 +1,9 @@
+node_modules/
+.next/
+.env*
+!.env.example
+*.log
+*.tsbuildinfo
+__pycache__/
+*.pyc
+.DS_Store

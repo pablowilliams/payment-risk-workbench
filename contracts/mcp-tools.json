@@ -1,0 +1,34 @@
+{
+  "server": "pulseledger-investigation",
+  "version": "1.0.0",
+  "boundary": "Read and propose only. No tool autonomously restricts a customer account.",
+  "tools": [
+    {
+      "name": "search_alerts",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string" },
+          "minimumRisk": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    {
+      "name": "get_investigation_evidence",
+      "inputSchema": {
+        "type": "object",
+        "required": ["alertId"],
+        "properties": { "alertId": { "type": "string" } }
+      }
+    },
+    {
+      "name": "propose_bounded_action",
+      "inputSchema": {
+        "type": "object",
+        "required": ["alertId"],
+        "properties": { "alertId": { "type": "string" } }
+      },
+      "requiresHumanApproval": true
+    }
+  ]
+}

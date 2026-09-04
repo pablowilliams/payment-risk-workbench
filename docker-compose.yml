@@ -1,0 +1,35 @@
+services:
+  redpanda:
+    image: redpandadata/redpanda:v25.2.4
+    command:
+      [
+        "redpanda",
+        "start",
+        "--overprovisioned",
+        "--smp",
+        "1",
+        "--memory",
+        "1G",
+        "--reserve-memory",
+        "0M",
+        "--node-id",
+        "0",
+        "--check=false",
+        "--kafka-addr",
+        "PLAINTEXT://0.0.0.0:9092,OUTSIDE://0.0.0.0:19092",
+        "--advertise-kafka-addr",
+        "PLAINTEXT://redpanda:9092,OUTSIDE://localhost:19092",
+      ]
+    ports: ["19092:19092", "9644:9644"]
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      { POSTGRES_USER: pulseledger, POSTGRES_PASSWORD: pulseledger, POSTGRES_DB: pulseledger }
+    ports: ["5432:5432"]
+    volumes: ["postgres-data:/var/lib/postgresql/data"]
+  neo4j:
+    image: neo4j:5.26-community
+    environment: { NEO4J_AUTH: "neo4j/pulseledger-local" }
+    ports: ["7474:7474", "7687:7687"]
+    volumes: ["neo4j-data:/data"]
+volumes: { postgres-data: {}, neo4j-data: {} }

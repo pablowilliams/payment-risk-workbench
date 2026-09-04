@@ -1,0 +1,70 @@
+asyncapi: 3.0.0
+info:
+  {
+    title: PulseLedger Event Backbone,
+    version: 1.0.0,
+    description: Replayable payment-risk contracts with event-time identity.,
+  }
+channels:
+  paymentRaw:
+    address: payment.raw
+    messages: { paymentObserved: { $ref: "#/components/messages/PaymentObserved" } }
+  riskScored:
+    address: risk.scored
+    messages: { riskScored: { $ref: "#/components/messages/RiskScored" } }
+  decisionAudit:
+    address: decision.audit
+    messages: { decisionRecorded: { $ref: "#/components/messages/DecisionRecorded" } }
+operations:
+  ingestPayments: { action: receive, channel: { $ref: "#/channels/paymentRaw" } }
+  publishScores: { action: send, channel: { $ref: "#/channels/riskScored" } }
+  publishDecisionAudit: { action: send, channel: { $ref: "#/channels/decisionAudit" } }
+components:
+  messages:
+    PaymentObserved:
+      {
+        payload:
+          {
+            type: object,
+            required: [eventId, eventTime, accountId, amountMinor, currency],
+            properties:
+              {
+                eventId: { type: string },
+                eventTime: { type: string, format: date-time },
+                accountId: { type: string },
+                amountMinor: { type: integer },
+                currency: { type: string },
+              },
+          },
+      }
+    RiskScored:
+      {
+        payload:
+          {
+            type: object,
+            required: [eventId, modelVersion, score, featureTimestamp],
+            properties:
+              {
+                eventId: { type: string },
+                modelVersion: { type: string },
+                score: { type: number },
+                featureTimestamp: { type: string, format: date-time },
+              },
+          },
+      }
+    DecisionRecorded:
+      {
+        payload:
+          {
+            type: object,
+            required: [decisionId, alertId, actorId, payloadHash, recordedAt],
+            properties:
+              {
+                decisionId: { type: string },
+                alertId: { type: string },
+                actorId: { type: string },
+                payloadHash: { type: string },
+                recordedAt: { type: string, format: date-time },
+              },
+          },
+      }

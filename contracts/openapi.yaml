@@ -1,0 +1,64 @@
+openapi: 3.1.0
+info:
+  {
+    title: PulseLedger Investigation API,
+    version: 1.0.0,
+    description: Human-authorised decision support over synthetic portfolio evidence.,
+  }
+servers: [{ url: "http://localhost:3003" }]
+paths:
+  /api/health:
+    get: { operationId: health, responses: { "200": { description: Service health } } }
+  /api/alerts:
+    get:
+      operationId: listAlerts
+      parameters:
+        - { in: query, name: q, schema: { type: string } }
+        - { in: query, name: minimumRisk, schema: { type: number, minimum: 0, maximum: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 60 } }
+      responses: { "200": { description: Ranked synthetic alert sample } }
+  /api/decisions:
+    post:
+      operationId: proposeDecision
+      description: Assembles a recommendation but never executes a customer action.
+      requestBody:
+        {
+          required: true,
+          content:
+            { application/json: { schema: { $ref: "#/components/schemas/ProposalRequest" } } },
+        }
+      responses:
+        {
+          "201": { description: Decision awaiting named approval },
+          "400": { description: Invalid request },
+          "404": { description: Alert not found },
+        }
+    put:
+      operationId: approveDecision
+      description: Approves only the immutable payload represented by payloadHash.
+      requestBody:
+        {
+          required: true,
+          content:
+            { application/json: { schema: { $ref: "#/components/schemas/ApprovalRequest" } } },
+        }
+      responses:
+        {
+          "200": { description: Approved simulation decision },
+          "409": { description: State or hash conflict },
+        }
+components:
+  schemas:
+    ProposalRequest:
+      { type: object, required: [alertId], properties: { alertId: { type: string } } }
+    ApprovalRequest:
+      {
+        type: object,
+        required: [decisionId, payloadHash, approver],
+        properties:
+          {
+            decisionId: { type: string },
+            payloadHash: { type: string, minLength: 20, maxLength: 20 },
+            approver: { type: string },
+          },
+      }
