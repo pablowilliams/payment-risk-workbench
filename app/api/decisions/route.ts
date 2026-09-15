@@ -15,14 +15,14 @@ function error(message: string, status: number) {
   );
 }
 function actor(request: NextRequest, requiredRole: "investigator" | "supervisor") {
-  const role = request.headers.get("x-demo-role");
+  const role = request.headers.get("x-workbench-role");
   const actorId = request.headers.get("x-actor-id")?.trim();
   if (role !== requiredRole || !actorId || actorId.length > 120) return null;
   return actorId;
 }
 export async function POST(request: NextRequest) {
   const actorId = actor(request, "investigator");
-  if (!actorId) return error("Demo investigator identity is required", 403);
+  if (!actorId) return error("Investigator identity is required", 403);
   const parsed = proposal.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return error("A valid alertId is required", 400);
   try {
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
 }
 export async function PUT(request: NextRequest) {
   const actorId = actor(request, "supervisor");
-  if (!actorId) return error("Demo supervisor identity is required", 403);
+  if (!actorId) return error("Supervisor identity is required", 403);
   const parsed = approval.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return error("decisionId and exact payloadHash are required", 400);
   const current = decisions.get(parsed.data.decisionId);

@@ -40,7 +40,7 @@ export function InvestigationView() {
         method: "POST",
         headers: {
           "content-type": "application/json",
-          "x-demo-role": "investigator",
+          "x-workbench-role": "investigator",
           "x-actor-id": "investigator-042",
           "idempotency-key": `proposal-${alert.id}`,
         },
@@ -64,7 +64,7 @@ export function InvestigationView() {
         method: "PUT",
         headers: {
           "content-type": "application/json",
-          "x-demo-role": "supervisor",
+          "x-workbench-role": "supervisor",
           "x-actor-id": "supervisor-007",
         },
         body: JSON.stringify({

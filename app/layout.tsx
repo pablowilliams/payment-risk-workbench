@@ -3,7 +3,8 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://payment-risk-workbench.gjpw.chatgpt.site"),
   title: "Payment Risk Workbench | Investigation operations",
-  description: "A working demonstration of payment-risk investigation and model operations.",
+  description:
+    "Payment-risk investigation, model operations, and evidence review in one working environment.",
   applicationName: "Payment Risk Workbench",
   authors: [{ name: "Pablo Williams" }],
   robots: { index: true, follow: true },

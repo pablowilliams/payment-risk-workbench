@@ -15,7 +15,7 @@ test("decision routes enforce role separation and exact approval state", async (
 
   const headers = {
     "content-type": "application/json",
-    "x-demo-role": "investigator",
+    "x-workbench-role": "investigator",
     "x-actor-id": "route-investigator",
     "idempotency-key": "route-contract-test",
   };
@@ -40,7 +40,7 @@ test("decision routes enforce role separation and exact approval state", async (
       method: "PUT",
       headers: {
         "content-type": "application/json",
-        "x-demo-role": "supervisor",
+        "x-workbench-role": "supervisor",
         "x-actor-id": "route-investigator",
       },
       body: approvalBody,
@@ -53,7 +53,7 @@ test("decision routes enforce role separation and exact approval state", async (
       method: "PUT",
       headers: {
         "content-type": "application/json",
-        "x-demo-role": "supervisor",
+        "x-workbench-role": "supervisor",
         "x-actor-id": "route-supervisor",
       },
       body: approvalBody,
@@ -67,7 +67,7 @@ test("decision routes enforce role separation and exact approval state", async (
       method: "PUT",
       headers: {
         "content-type": "application/json",
-        "x-demo-role": "supervisor",
+        "x-workbench-role": "supervisor",
         "x-actor-id": "another-supervisor",
       },
       body: approvalBody,

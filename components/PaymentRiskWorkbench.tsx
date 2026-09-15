@@ -146,7 +146,7 @@ export function PaymentRiskWorkbench() {
           <div className="analyst">PW</div>
           <span>
             <b>Pablo Williams</b>
-            <small>Demo operator</small>
+            <small>Operations reviewer</small>
           </span>
         </footer>
       </aside>
@@ -168,7 +168,7 @@ export function PaymentRiskWorkbench() {
             </button>
             <span className="live">
               <i />
-              Demo feed
+              Evaluation feed
             </span>
             <div className="avatar">PW</div>
           </aside>
