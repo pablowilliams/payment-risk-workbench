@@ -1,4 +1,6 @@
 .next
+dist
+.wrangler
 node_modules
 public/*.pdf
 data/*.json

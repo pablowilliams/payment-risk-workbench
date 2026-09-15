@@ -10,14 +10,15 @@
     "build": "next build",
     "postbuild": "node scripts/prepare-standalone.mjs",
     "start": "PORT=3003 HOSTNAME=0.0.0.0 node .next/standalone/server.js",
-    "lint": "eslint . --ignore-pattern .next",
+    "lint": "eslint . --ignore-pattern .next --ignore-pattern dist",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
     "backtest": "python3 analytics/backtest.py",
     "validate:backtest": "python3 analytics/validate_backtest.py",
-    "check": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run validate:backtest && npm run build"
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run validate:backtest && npm run build",
+    "sites:build": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext build"
   },
   "dependencies": {
     "lucide-react": "^0.544.0",
@@ -27,13 +28,21 @@
     "zod": "4.1.12"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.37.1",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "@vitejs/plugin-rsc": "^0.5.26",
     "eslint": "9.39.4",
     "eslint-config-next": "^16.3.4",
     "prettier": "^3.9.6",
+    "react-server-dom-webpack": "^19.2.6",
     "tsx": "4.20.6",
-    "typescript": "5.9.3"
-  }
+    "typescript": "5.9.3",
+    "vinext": "^0.0.50",
+    "vite": "^8.0.13",
+    "wrangler": "^4.92.0"
+  },
+  "type": "module"
 }

@@ -4,6 +4,8 @@
 
 Payment Risk Workbench is an investigation platform for the fictional Verdant Bank. It connects streaming payment contracts, behavioural and graph detection, capacity-aware alert ranking, reviewable evidence and exact-payload supervisor approval. It is presented as an internal operations tool, with every material claim linked to reproducible evidence.
 
+**Live application:** [payment-risk-workbench.gjpw.chatgpt.site](https://payment-risk-workbench.gjpw.chatgpt.site)
+
 > All people, payments, labels, exposure, latency and operating telemetry are synthetic or modelled. This is not connected to a bank and it does not claim production performance.
 
 ## The operating question
