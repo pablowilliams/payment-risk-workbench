@@ -2326,3 +2326,136 @@ summary:focus-visible {
     scroll-behavior: auto !important;
   }
 }
+
+/* 2026 visual system: regulated-bank casework, built around paper records. */
+:root {
+  --bg: #d9d6cc;
+  --surface: #fffdf7;
+  --soft: #f1efe7;
+  --ink: #16231d;
+  --muted: #637068;
+  --line: #cccabe;
+  --dark: #10251c;
+  --dark2: #173326;
+  --green: #176447;
+  --mint: #dbece2;
+  --acid: #efd65b;
+  --shadow: 0 1px 0 rgba(16, 37, 28, 0.08), 7px 9px 0 rgba(16, 37, 28, 0.045);
+}
+body {
+  background: linear-gradient(90deg, rgba(16, 37, 28, 0.025) 1px, transparent 1px), var(--bg);
+  background-size: 32px 32px;
+}
+.app {
+  grid-template-columns: 292px minmax(0, 1fr);
+}
+.sidebar {
+  width: auto;
+  background: #10251c;
+  border-right: 7px solid #efd65b;
+  padding: 25px 18px;
+}
+.sidebar > header {
+  border-bottom: 0;
+  padding-bottom: 25px;
+}
+.logo {
+  border-radius: 50%;
+  background: transparent;
+  color: var(--acid);
+  border: 1px solid rgba(239, 214, 91, 0.55);
+}
+.sidebar > header b {
+  font-family: var(--serif);
+  font-size: 20px;
+}
+.bank {
+  border-radius: 0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-left: 4px solid var(--acid);
+  background: rgba(255, 255, 255, 0.045);
+}
+.sidebar nav {
+  gap: 6px;
+}
+.sidebar nav button {
+  border-radius: 0;
+  min-height: 56px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.sidebar nav button.active {
+  background: var(--acid);
+  color: #10251c;
+  border-color: var(--acid);
+}
+.sidebar nav button.active small,
+.sidebar nav button.active kbd,
+.sidebar nav button.active > svg {
+  color: #385346;
+}
+.topbar {
+  height: 70px;
+  background: rgba(255, 253, 247, 0.96);
+  border-bottom: 3px double var(--ink);
+}
+.content {
+  max-width: 1460px;
+  padding: 46px 48px 90px;
+}
+.page-head {
+  align-items: flex-start;
+  border-bottom: 3px double var(--ink);
+}
+.page-head h1 {
+  font-size: clamp(46px, 5vw, 74px);
+  max-width: 980px;
+}
+.panel {
+  border-radius: 0;
+  border-color: #bdbbae;
+  box-shadow: var(--shadow);
+}
+.decision-banner {
+  border-radius: 0;
+  border-left: 8px solid var(--acid);
+  background: #173326;
+}
+.metrics {
+  gap: 1px;
+  background: var(--ink);
+  border: 1px solid var(--ink);
+}
+.metric {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.button,
+.search,
+input,
+select,
+textarea {
+  border-radius: 2px !important;
+}
+.queue-table thead,
+.data-table thead {
+  background: #e6e2d6;
+}
+@media (max-width: 980px) and (min-width: 701px) {
+  .app {
+    grid-template-columns: 76px minmax(0, 1fr);
+  }
+  .sidebar {
+    padding-inline: 10px;
+  }
+}
+@media (max-width: 700px) {
+  .sidebar {
+    width: 286px;
+  }
+  .content {
+    padding: 28px 16px 64px;
+  }
+  .page-head h1 {
+    font-size: 40px;
+  }
+}
