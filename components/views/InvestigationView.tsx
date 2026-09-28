@@ -4,6 +4,8 @@ import {
   Check,
   CheckCircle2,
   Clock3,
+  Eye,
+  EyeOff,
   FileText,
   LockKeyhole,
   MapPin,
@@ -25,6 +27,7 @@ export function InvestigationView() {
   const [alert, setAlert] = useState<PaymentAlert>(alerts[0]),
     [decision, setDecision] = useState<InvestigationDecision | null>(null),
     [notice, setNotice] = useState(""),
+    [revealed, setRevealed] = useState(false),
     [working, setWorking] = useState<"proposal" | "approval" | null>(null);
   useEffect(() => {
     const id = sessionStorage.getItem("pulse-alert");
@@ -111,10 +114,15 @@ export function InvestigationView() {
                 <span>Synthetic customer</span>
                 <h2>{alert.customer}</h2>
                 <p>
-                  {alert.account} · {alert.region} · Retail current account
+                  {revealed ? alert.account : `•••• ${alert.account.slice(-4)}`} · {alert.region} · Retail current account
                 </p>
               </div>
-              <Badge tone="amber">Enhanced review</Badge>
+              <div className="identity-controls">
+                <Badge tone="amber">Enhanced review</Badge>
+                <button className="identity-reveal" onClick={() => setRevealed((value) => !value)} aria-pressed={revealed}>
+                  {revealed ? <EyeOff size={13} /> : <Eye size={13} />}{revealed ? "Mask identifiers" : "Reveal identifiers"}
+                </button>
+              </div>
             </header>
             <div className="customer-facts">
               <div>
@@ -209,7 +217,9 @@ export function InvestigationView() {
               title="Connected risk, not guilt"
               action={<Network size={17} />}
             />
-            <div className="network-preview">
+            <div className="network-preview evidence-scan" tabIndex={0} aria-label="Connected-risk evidence. Focus or hover to scan the relationship map.">
+              <div className="evidence-scan__beam" aria-hidden="true" />
+              <div className="evidence-scan__status"><span>RELATIONSHIP SCAN</span><b>4 entities · 3 risk signals</b></div>
               <div className="node centre">{alert.customer.split(" ")[0]}</div>
               <div className="node device">Shared device</div>
               <div className="node account">Linked A/C</div>
@@ -218,6 +228,7 @@ export function InvestigationView() {
                 <path d="M50 25L18 12M50 25L18 40M50 25L82 14M50 25L82 40" />
                 <circle cx="50" cy="25" r="3" />
               </svg>
+              <div className="scan-findings" aria-hidden="true"><span>new device</span><span>recipient age {alert.signals.recipientAgeDays}d</span><span>{alert.signals.geoDistanceKm}km variance</span></div>
             </div>
           </Panel>
         </div>
