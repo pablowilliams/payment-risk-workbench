@@ -2,11 +2,25 @@
 
 **A working payment-risk investigation and data-platform portfolio.**
 
+[![Live demo](https://img.shields.io/badge/live_demo-open-F05A4F?style=flat-square)](https://pablowilliams.github.io/payment-risk-workbench/)
+[![Quality gate](https://img.shields.io/github/actions/workflow/status/pablowilliams/payment-risk-workbench/quality.yml?branch=main&style=flat-square&label=quality)](https://github.com/pablowilliams/payment-risk-workbench/actions/workflows/quality.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-0B1220?style=flat-square)](LICENSE)
+
+[**Open the live risk workbench →**](https://pablowilliams.github.io/payment-risk-workbench/)
+
+![Payment Risk Workbench investigation platform](public/og.png)
+
 Payment Risk Workbench is an investigation platform for the fictional Verdant Bank. It connects streaming payment contracts, behavioural and graph detection, capacity-aware alert ranking, reviewable evidence and exact-payload supervisor approval. It is presented as an internal operations tool, with every material claim linked to reproducible evidence.
 
-**Live application:** [payment-risk-workbench.gjpw.chatgpt.site](https://payment-risk-workbench.gjpw.chatgpt.site)
-
 > All people, payments, labels, exposure, latency and operating telemetry are synthetic or modelled. This is not connected to a bank and it does not claim production performance.
+
+## Why it is portfolio-grade
+
+| Product depth | Engineering depth | Evidence discipline |
+|---|---|---|
+| Seven connected operations views, case decisions and dual-control approval | Next.js APIs, Python analytics, graph features, streaming contracts, Terraform and observability | One-million-event deterministic backtest, independent validator, fixed-capacity comparison and CV evidence ledger |
+
+**Reviewer shortcuts:** [live demo](https://pablowilliams.github.io/payment-risk-workbench/) · [evaluation](docs/evaluation.md) · [architecture](docs/architecture.md) · [system card](docs/system-card.md) · [claim ledger](docs/cv-evidence-ledger.md)
 
 ## The operating question
 
@@ -107,3 +121,10 @@ The bundled [75-page delivery blueprint](public/payment-risk-workbench-blueprint
 ## Licence
 
 MIT. Built by Pablo Williams as a portfolio project.
+
+## Flagship portfolio
+
+Payment Risk Workbench is one of three end-to-end systems in my data and risk engineering portfolio:
+
+- [GraphShield](https://github.com/pablowilliams/graphshield) — explainable graph investigations backed by a Go worker architecture and Neo4j GDS.
+- [SignalOps](https://github.com/pablowilliams/signalops) — data incident intelligence with leakage-safe anomaly detection and reproducible evaluation.
