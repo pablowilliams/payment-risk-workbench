@@ -16,8 +16,8 @@ Payment Risk Workbench is an investigation platform for the fictional Verdant Ba
 
 ## Why it is portfolio-grade
 
-| Product depth | Engineering depth | Evidence discipline |
-|---|---|---|
+| Product depth                                                              | Engineering depth                                                                                | Evidence discipline                                                                                               |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
 | Seven connected operations views, case decisions and dual-control approval | Next.js APIs, Python analytics, graph features, streaming contracts, Terraform and observability | One-million-event deterministic backtest, independent validator, fixed-capacity comparison and CV evidence ledger |
 
 **Reviewer shortcuts:** [live demo](https://pablowilliams.github.io/payment-risk-workbench/) · [evaluation](docs/evaluation.md) · [architecture](docs/architecture.md) · [system card](docs/system-card.md) · [claim ledger](docs/cv-evidence-ledger.md)
