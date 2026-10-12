@@ -35,6 +35,32 @@ export function InvestigationView() {
     if (found) requestAnimationFrame(() => setAlert(found));
   }, []);
   const reasonCodes = reasonCodesFor(alert);
+  const isStaticEdition = () => document.documentElement.dataset.delivery === "static";
+  const staticProposal = (): InvestigationDecision => {
+    const now = new Date();
+    const action = alert.ensembleScore >= 0.86 ? "temporary_payment_hold" : "request_verification";
+    return {
+      id: `DEMO-${alert.id}`,
+      alertId: alert.id,
+      status: "awaiting_approval",
+      recommendedAction: action,
+      rationale:
+        "This deterministic static demonstration keeps the proposed action time-limited and subject to an independent supervisor review.",
+      evidence: [
+        `Risk ensemble ${Math.round(alert.ensembleScore * 100)}%`,
+        `Graph score ${Math.round(alert.graphScore * 100)}%`,
+        `${alert.signals.sharedDevices} accounts share a device`,
+        `${alert.signals.velocity1h} payments in one hour`,
+        ...policies.slice(0, 2).map((policy) => `${policy.id}: ${policy.title}`),
+      ],
+      actionScope: "outbound_payments",
+      durationHours: 2,
+      payloadHash: `static-${alert.id}`.padEnd(64, "0").slice(0, 64),
+      createdAt: now.toISOString(),
+      expiresAt: new Date(now.getTime() + 2 * 60 * 60 * 1000).toISOString(),
+      proposedBy: "demo-investigator",
+    };
+  };
   async function propose() {
     setNotice("");
     setWorking("proposal");
@@ -54,7 +80,14 @@ export function InvestigationView() {
       setDecision(body);
       setNotice("Proposal prepared for an independent supervisor review.");
     } catch (cause) {
-      setNotice(cause instanceof Error ? cause.message : "Proposal could not be prepared");
+      if (isStaticEdition()) {
+        setDecision(staticProposal());
+        setNotice(
+          "Static demonstration: proposal prepared locally for an independent supervisor review.",
+        );
+      } else {
+        setNotice(cause instanceof Error ? cause.message : "Proposal could not be prepared");
+      }
     } finally {
       setWorking(null);
     }
@@ -80,7 +113,17 @@ export function InvestigationView() {
       setDecision(body);
       setNotice("Supervisor approval recorded for the exact, time-limited payload.");
     } catch (cause) {
-      setNotice(cause instanceof Error ? cause.message : "Approval could not be recorded");
+      if (isStaticEdition()) {
+        setDecision({
+          ...decision,
+          status: "approved",
+          approvedAt: new Date().toISOString(),
+          approver: "demo-supervisor",
+        });
+        setNotice("Static demonstration: independent supervisor approval recorded locally.");
+      } else {
+        setNotice(cause instanceof Error ? cause.message : "Approval could not be recorded");
+      }
     } finally {
       setWorking(null);
     }
@@ -114,13 +157,19 @@ export function InvestigationView() {
                 <span>Synthetic customer</span>
                 <h2>{alert.customer}</h2>
                 <p>
-                  {revealed ? alert.account : `•••• ${alert.account.slice(-4)}`} · {alert.region} · Retail current account
+                  {revealed ? alert.account : `•••• ${alert.account.slice(-4)}`} · {alert.region} ·
+                  Retail current account
                 </p>
               </div>
               <div className="identity-controls">
                 <Badge tone="amber">Enhanced review</Badge>
-                <button className="identity-reveal" onClick={() => setRevealed((value) => !value)} aria-pressed={revealed}>
-                  {revealed ? <EyeOff size={13} /> : <Eye size={13} />}{revealed ? "Mask identifiers" : "Reveal identifiers"}
+                <button
+                  className="identity-reveal"
+                  onClick={() => setRevealed((value) => !value)}
+                  aria-pressed={revealed}
+                >
+                  {revealed ? <EyeOff size={13} /> : <Eye size={13} />}
+                  {revealed ? "Mask identifiers" : "Reveal identifiers"}
                 </button>
               </div>
             </header>
@@ -217,9 +266,16 @@ export function InvestigationView() {
               title="Connected risk, not guilt"
               action={<Network size={17} />}
             />
-            <div className="network-preview evidence-scan" tabIndex={0} aria-label="Connected-risk evidence. Focus or hover to scan the relationship map.">
+            <div
+              className="network-preview evidence-scan"
+              tabIndex={0}
+              aria-label="Connected-risk evidence. Focus or hover to scan the relationship map."
+            >
               <div className="evidence-scan__beam" aria-hidden="true" />
-              <div className="evidence-scan__status"><span>RELATIONSHIP SCAN</span><b>4 entities · 3 risk signals</b></div>
+              <div className="evidence-scan__status">
+                <span>RELATIONSHIP SCAN</span>
+                <b>4 entities · 3 risk signals</b>
+              </div>
               <div className="node centre">{alert.customer.split(" ")[0]}</div>
               <div className="node device">Shared device</div>
               <div className="node account">Linked A/C</div>
@@ -228,7 +284,11 @@ export function InvestigationView() {
                 <path d="M50 25L18 12M50 25L18 40M50 25L82 14M50 25L82 40" />
                 <circle cx="50" cy="25" r="3" />
               </svg>
-              <div className="scan-findings" aria-hidden="true"><span>new device</span><span>recipient age {alert.signals.recipientAgeDays}d</span><span>{alert.signals.geoDistanceKm}km variance</span></div>
+              <div className="scan-findings" aria-hidden="true">
+                <span>new device</span>
+                <span>recipient age {alert.signals.recipientAgeDays}d</span>
+                <span>{alert.signals.geoDistanceKm}km variance</span>
+              </div>
             </div>
           </Panel>
         </div>

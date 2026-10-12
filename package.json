@@ -8,9 +8,10 @@
   "scripts": {
     "dev": "next dev --port 3003",
     "build": "next build",
+    "build:pages": "vite build --config vite.pages.config.ts",
     "postbuild": "node scripts/prepare-standalone.mjs",
     "start": "PORT=3003 HOSTNAME=0.0.0.0 node .next/standalone/server.js",
-    "lint": "eslint . --ignore-pattern .next --ignore-pattern dist",
+    "lint": "eslint . --ignore-pattern .next --ignore-pattern dist --ignore-pattern dist-pages",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
